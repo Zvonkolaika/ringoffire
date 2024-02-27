@@ -7,20 +7,20 @@
 
         <!-- Card stack -->
         @for(c of [0,1,2,3]; track c; let index = $index){
-            <img [ngStyle]="{'right.px': index * 5}" src="./../../assets/img/playing_cards/card_cover.png">
+            <img [ngStyle]="{'right.px': index * 5}" src="./assets/img/playing_cards/card_cover.png">
         }
         <img (click)="takeCard()" class="top-card" [ngStyle]="{'right.px': 25}" 
-        src="./../../assets/img/playing_cards/card_cover.png">
+        src="./assets/img/playing_cards/card_cover.png">
        
         <!-- Stack for played cards -->
         @for(card of game.playedCards; track card){
-            <img class="played-card" src="./../../assets/img/playing_cards/{{card}}.png">
+            <img class="played-card" src="./assets/img/playing_cards/{{card}}.png">
         }
 
         <!-- Current card (Animation) --> 
         @if (pickCardAnimation) {
             <img (click)="takeCard()" class="pick-card" [ngStyle]="{'right.px': 25}" 
-            src="./../../assets/img/playing_cards/{{currentCard}}.png">
+            src="./assets/img/playing_cards/{{currentCard}}.png">
         }
     </div>
 </div>
