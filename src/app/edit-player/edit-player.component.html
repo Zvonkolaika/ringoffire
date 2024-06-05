@@ -1,0 +1,5 @@
+<div [ngStyle]="{'display': 'flex' }">
+    @for (picture of allProfilePictures; track $index) {
+    <img class="profile-picture" [mat-dialog-close]="picture" src="../../assets/img/profile/{{picture}}">
+    }
+</div>

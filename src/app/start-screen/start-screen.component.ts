@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { addDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 
 @Component({
@@ -16,5 +17,7 @@ export class StartScreenComponent {
   newGame(){
     //Start game
     this.router.navigateByUrl('/game');
+
   }
+
 }
