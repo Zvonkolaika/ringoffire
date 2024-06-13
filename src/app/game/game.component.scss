@@ -97,3 +97,19 @@ app-player, app-mobile-player{
         filter: brightness(1.15);
     }
 }
+
+.game-over{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img{
+        width: 340px;
+    }
+}
+
+.preload-image{
+   opacity: 0;
+   z-index: -1000;
+   height: 0;
+   width: 0;
+}

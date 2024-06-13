@@ -1,42 +1,57 @@
+
 @for (player of game.players; track player; let index = $index) {
-    <app-player (click)="editPlayer(index)" [ngStyle]="{'top.px': 100 + (index * 90)}"
-    [playerActive]="index == game.currentPlayer" [name]="player"
+    <app-player (click)="editPlayer(index)" [ngStyle]="{'top.px': 20 + (index * 70)}"
+    [playerActive]="index == game.currentPlayer" [name]="player" [image]="game.player_images[index]"
     class="player-position hide-mobile"></app-player>
 }
 <div class="scroll-container hide-desktop">
     @for (player of game.players; track player; let index = $index) {
     
         <app-mobile-player (click)="editPlayer(index)"
-        [playerActive]="index == game.currentPlayer" [name]="player">
+        [playerActive]="index == game.currentPlayer" [name]="player" [image]="game.player_images[index]">
         </app-mobile-player>
     }
 </div>
 
-
 <div class="field">
-    <div class="card-stack">
+    
+    @if(gameOver){
+        <div class="game-over">
+            <img src="../../assets/img/gameover.jpg">
+        </div>
+    }
+    <img class="preload-image" src="./assets/img/playing_cards/{{game.stack[game.stack.length -1]}}.png">
+    @if(!gameOver){
+        <div class="card-stack">
 
-        <!-- Card stack -->
-        @for(c of [0,1,2,3]; track c; let index = $index){
-            <img [ngStyle]="{'right.px': index * 5}" src="./assets/img/playing_cards/card_cover.png">
-        }
-        <img (click)="takeCard()" class="top-card" [ngStyle]="{'right.px': 25}"
-        src="./assets/img/playing_cards/card_cover.png">
+            <!-- Card stack -->
+            @for(c of [0,1,2,3]; track c; let index = $index){
+                <img [ngStyle]="{'right.px': index * 5}" src="./assets/img/playing_cards/card_cover.png">
+            }
+            <img (click)="takeCard()" class="top-card" [ngStyle]="{'right.px': 25}"
+            src="./assets/img/playing_cards/card_cover.png">
+    
+            <!-- Stack for played cards -->
+            @for(card of game.playedCards; track card){
+                <img class="played-card" src="./assets/img/playing_cards/{{card}}.png">
+              
+            }
+    
+            <!-- Current card (Animation) -->
+            @if (game.pickCardAnimation) {
+                <img (click)="takeCard()" class="pick-card" [ngStyle]="{'right.px': 25}"
+                src="./assets/img/playing_cards/{{game.currentCard}}.png">
+            }
+        </div>
 
-        <!-- Stack for played cards -->
-        @for(card of game.playedCards; track card){
-            <img class="played-card" src="./assets/img/playing_cards/{{card}}.png">
-        }
-
-        <!-- Current card (Animation) -->
-        @if (game.pickCardAnimation) {
-            <img (click)="takeCard()" class="pick-card" [ngStyle]="{'right.px': 25}"
-            src="./assets/img/playing_cards/{{game.currentCard}}.png">
+        <app-game-info class="pin-bottom" [card]="game.currentCard"></app-game-info>
+    
+        <button mat-fab color="primary" (click)="openDialog()" class="btn-add">
+            <mat-icon>add</mat-icon>
+        </button>
         }
     </div>
-</div>
-<app-game-info class="pin-bottom" [card]="game.currentCard"></app-game-info>
+    
 
-<button mat-fab color="primary" (click)="openDialog()" class="btn-add">
-    <mat-icon>add</mat-icon>
-</button>
+
+

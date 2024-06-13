@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import {MatDialog} from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { GameInfoComponent } from '../game-info/game-info.component';
-import { Firestore, doc, collection, collectionData, onSnapshot, setDoc, deleteDoc, addDoc } from '@angular/fire/firestore';
+import { Firestore, doc, collection, onSnapshot, setDoc } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { MobilePlayerComponent } from '../mobile-player/mobile-player.component';
 import { EditPlayerComponent } from '../edit-player/edit-player.component';
@@ -24,6 +24,7 @@ export class GameComponent {
   gameId!: string;
   game!: Game;
   gameInfo: any;
+  gameOver = false;
 
   firestore: Firestore = inject(Firestore);
 
@@ -38,7 +39,7 @@ export class GameComponent {
     });
     this.unsubList = onSnapshot(this.getSingleGameRef('games', this.gameId), (data) => {
       console.log('data:', data.data());
-      this.game.currentPlayer = data.get('currentPlayer');
+      this.game.currentPlayer = data.get('currentPlayer') || 0;
       this.game.players = data.get('players');
       this.game.player_images = data.get('player_images');
       this.game.playedCards = data.get('playedCards');
@@ -70,7 +71,10 @@ export class GameComponent {
 
 
   async takeCard(){
-    if(!this.game.pickCardAnimation){
+    if(this.game.stack.length == 0){
+      console.log('game over', this.gameOver);
+      this.gameOver = true;
+    } else if(!this.game.pickCardAnimation){
       this.game.currentCard = this.game.stack.pop();
       this.game.pickCardAnimation = true;
       console.log('New Card ' + this.game.currentCard);
@@ -90,7 +94,16 @@ export class GameComponent {
     console.log('Edit Player', playerID);
     const dialogRef = this.dialog.open(EditPlayerComponent);
     dialogRef.afterClosed().subscribe((picture: string) => {
-      console.log('Recieved change', picture);
+      if(picture){
+        if(picture == 'DELETE'){
+          this.game.players.splice(playerID, 1)
+          this.game.player_images.splice(playerID, 1)
+        }
+        else{
+          this.game.player_images[playerID] = picture;
+        }
+        this.saveGame();
+      }
     });
   }
 
@@ -100,6 +113,7 @@ export class GameComponent {
     dialogRef.afterClosed().subscribe((name: string) => {
       if(name && name.length > 0){
         this.game.players.push(name);
+        this.game.player_images.push('1.webp');
         this.saveGame();
       }
     });
